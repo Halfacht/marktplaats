@@ -9,34 +9,11 @@
                         Home
                     </router-link>
                 </li>
-                <li class="nav-item">
-                    <router-link :to="{ name: 'newsletter-subscription' }" class="nav-link">
-                        Newsletter
-                    </router-link>
-                </li>
 
-                <template v-if="isWriter">
+                <template v-if="auth">
 
                     <li class="nav-item">
-                        <router-link :to="{ name: 'dashboard' }" class="nav-link">
-                            Dashboard
-                        </router-link>
-                    </li>
-
-                    <li class="nav-item">
-                        <router-link :to="{ name: 'blogs.create' }" class="nav-link">
-                            New Blog
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link :to="{ name: 'categories.create' }" class="nav-link">
-                            New Category
-                        </router-link>
-                    </li>
-                    <li class="nav-item">
-                        <router-link :to="{ name: 'subscription' }" class="nav-link">
-                            Subscription
-                        </router-link>
+                        Hier komt wat als je ingelogd bent
                     </li>
 
                 </template>
@@ -74,7 +51,7 @@ import {mapActions, mapGetters} from "vuex";
 
 export default {
     computed: {
-        ...mapGetters(["auth", "isWriter"]),
+        ...mapGetters(["auth"]),
     },
     methods: {
         ...mapActions([

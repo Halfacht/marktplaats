@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Builders\UserBuilder;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -40,4 +41,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    #region Relationships
+
+    public function advertisements() {
+        return $this->hasMany(Advertisement::class);
+    }
+
+    #endregion Relationships
+
+    public function newEloquentBuilder($query)
+    {
+        return new UserBuilder($query);
+    }
 }

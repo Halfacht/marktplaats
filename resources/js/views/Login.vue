@@ -6,26 +6,26 @@
                     <label for="email" class="form-label">Email</label>
                     <input
                         class="form-control"
-                        :class="{ 'is-invalid': form.data.email }"
+                        :class="{ 'is-invalid': form.errors.get('email') }"
                         name="email"
                         id="email"
                         type="email"
                         v-model="form.data.email"
                     />
-                    <form-error error="form.errors.get('email')"></form-error>
+                    <form-error :error="form.errors.get('email')"></form-error>
                 </div>
 
                 <div class="mb-3">
                     <label for="password" class="form-label">Password</label>
                     <input
                         class="form-control"
-                        :class="{ 'is-invalid': form.data.password }"
+                        :class="{ 'is-invalid': form.errors.get('password') }"
                         name="password"
                         id="password"
                         type="password"
                         v-model="form.data.password"
                     />
-                    <form-error error="form.errors.get('password')"></form-error>
+                    <form-error :error="form.errors.get('password')"></form-error>
                 </div>
 
 
@@ -66,7 +66,7 @@ export default {
 
     methods: {
         login() {
-            this.form.action(this.$store, 'login')
+            this.form.action('login')
                 .then(() => router.push('/'));
         },
     },

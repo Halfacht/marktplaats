@@ -30,6 +30,15 @@ const actions = {
                 }).catch((response) => reject(response));
         });
     },
+    register({commit}, data) {
+        return new Promise((resolve, reject) => {
+            axios.post('api/register', data)
+                .then((response) => {
+                    commit('UPDATE_USER', response.data.user);
+                    resolve(response);
+                }).catch((response) => reject(response));
+        });
+    },
     logout({commit}) {
         axios.post('api/logout')
             .then(() => {

@@ -17,8 +17,7 @@ export default {
     },
 
     created() {
-        this.$store.dispatch("getBlogs");
-        this.$store.dispatch("getCategories");
+
     },
 };
 </script>

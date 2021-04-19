@@ -1,42 +1,16 @@
 import Errors from "./Errors.js";
-import Vue from "vue";
+import store from "../../store";
 
 export default class Form {
     constructor(data) {
         this.errors = new Errors();
 
         this.originalData = data;
+        this.data = data;
+
         this.successMessage = '';
         this.isSubmitting = false;
         this.wasValidated = false;
-
-        // Data to properties
-        for (let field in data) {
-            this[field] = data[field];
-        }
-    }
-
-    /**
-     * Data Properties to data object
-     *
-     * @returns Object
-     */
-    data() {
-        let data = new FormData();
-
-        for (let key in this.originalData) {
-            if (this[key]) {
-                data.append(key, this[key])
-            }
-        }
-
-        return data;
-    }
-
-    reset() {
-        for (let field in this.originalData) {
-            this[field] = this.originalData[field];
-        }
     }
 
     action(action) {
@@ -44,7 +18,7 @@ export default class Form {
             this.isValidated();
             this.isSubmitting = true;
 
-            Vue.store.dispatch(action, this.data())
+            store.dispatch(action, this.data)
                 .then((response) => {
                     this.onSuccess(response);
                     resolve(response);
@@ -67,6 +41,10 @@ export default class Form {
         this.isSubmitting = false;
 
         this.errors.record(error.response.data.errors);
+    }
+
+    reset() {
+        this.data = this.originalData;
     }
 
     isValidated(validated = true) {

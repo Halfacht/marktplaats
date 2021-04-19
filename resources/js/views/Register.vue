@@ -8,52 +8,52 @@
                   <label for="name" class="form-label">Name</label>
                   <input
                       class="form-control"
-                      :class="{ 'is-invalid': form.data.name }"
+                      :class="{ 'is-invalid': form.errors.get('name') }"
                       name="name"
                       id="name"
                       type="text"
                       v-model="form.data.name"
                   />
-                  <form-error error="form.errors.get('name')"></form-error>
+                  <form-error :error="form.errors.get('name')"></form-error>
               </div>
 
               <div class="mb-3">
                   <label for="email" class="form-label">Email</label>
                   <input
                       class="form-control"
-                      :class="{ 'is-invalid': form.data.email }"
+                      :class="{ 'is-invalid': form.errors.get('email') }"
                       name="email"
                       id="email"
                       type="email"
                       v-model="form.data.email"
                   />
-                  <form-error error="form.errors.get('email')"></form-error>
+                  <form-error :error="form.errors.get('email')"></form-error>
               </div>
 
               <div class="mb-3">
                   <label for="password" class="form-label">password</label>
                   <input
                       class="form-control"
-                      :class="{ 'is-invalid': form.data.password }"
+                      :class="{ 'is-invalid': form.errors.get('password') }"
                       name="password"
                       id="password"
                       type="password"
                       v-model="form.data.password"
                   />
-                  <form-error error="form.errors.get('password')"></form-error>
+                  <form-error :error="form.errors.get('password')"></form-error>
               </div>
 
               <div class="mb-3">
                   <label for="password_confirmation" class="form-label">Password confirmation</label>
                   <input
                       class="form-control"
-                      :class="{ 'is-invalid': form.data.password_confirmation }"
+                      :class="{ 'is-invalid': form.errors.get('password_confirmation') }"
                       name="password_confirmation"
                       id="password_confirmation"
                       type="password"
                       v-model="form.data.password_confirmation"
                   />
-                  <form-error error="form.errors.get('password_confirmation')"></form-error>
+                  <form-error :error="form.errors.get('password_confirmation')"></form-error>
               </div>
 
         <button
@@ -69,8 +69,7 @@
 </template>
 
 <script>
-import InputField from "@/components/form-parts/InputField.vue";
-import SuccessMessage from "@/components/parts/SuccessMessage.vue";
+import SuccessMessage from "../components/parts/SuccessMessage.vue";
 import FormError from "../components/parts/FormError";
 
 export default {
@@ -95,7 +94,7 @@ export default {
 
   methods: {
     register() {
-      this.form.action("/api/register");
+      this.form.action("/register");
     },
   },
 };
