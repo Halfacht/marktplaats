@@ -16,7 +16,7 @@ class UpdateAdvertisementRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::check() && Auth::user()->id === Advertisement::find($this->route('advertisement'))->id;
+        return Auth::check() && Auth::user()->id === $this->route('advertisement')->owner->id;
     }
 
     /**

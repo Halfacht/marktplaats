@@ -78,8 +78,8 @@ const actions = {
             	.catch((error) => form.onFail(error));
     },
 	updateAdvertisement({commit}, form) {
-		axios.put(`/api/advertisements/${form.data.id}`)
-			.then((resonse) => {
+		axios.put(`/api/advertisements/${form.data.id}`, form.data)
+			.then((response) => {
 				commit('UPDATE_USER_ADVERTISEMENT', response.data);
 				router.push('/user/advertisements')
 			})

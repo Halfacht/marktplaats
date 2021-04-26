@@ -18474,7 +18474,7 @@ var actions = {
   },
   updateAdvertisement: function updateAdvertisement(_ref5, form) {
     var commit = _ref5.commit;
-    axios__WEBPACK_IMPORTED_MODULE_0___default().put("/api/advertisements/".concat(form.data.id)).then(function (resonse) {
+    axios__WEBPACK_IMPORTED_MODULE_0___default().put("/api/advertisements/".concat(form.data.id), form.data).then(function (response) {
       commit('UPDATE_USER_ADVERTISEMENT', response.data);
       _routes__WEBPACK_IMPORTED_MODULE_2__.default.push('/user/advertisements');
     })["catch"](function (error) {

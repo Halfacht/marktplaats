@@ -37,7 +37,7 @@ public function __construct()
      */
     public function store(StoreAdvertisementRequest $request)
     {
-        $validatedData = $request->all();
+        $validatedData = $request->validated();
 		$validatedData['sort_date'] = Carbon::now();
 		$validatedData['user_id'] = Auth::user()->id;
 
@@ -60,8 +60,15 @@ public function __construct()
         return new AdvertisementResource($advertisement);
     }
 
-	public function update(UpdateAdvertisementRequest $request) {
+	public function update(UpdateAdvertisementRequest $request, Advertisement $advertisement) {
+		$advertisement->update($request->validated());
 
+		$advertisement->refresh();
+
+		return response()->json([
+			'message' => 'advertisement updated succesfully',
+			'advertisement' => new AdvertisementResource($advertisement),
+		]);
 	}
 
     /**
