@@ -21,6 +21,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+		'postcode_id',
     ];
 
     /**
@@ -42,7 +43,13 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+	protected $with = ['postcode'];
+
     #region Relationships
+
+	public function postcode(){
+		return $this->belongsTo(Postcode::class);
+	}
 
     public function advertisements() {
         return $this->hasMany(Advertisement::class);

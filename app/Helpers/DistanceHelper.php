@@ -1,27 +1,21 @@
 <?php
 
 
-namespace Helpers;
+namespace App\Helpers;
 
 
 class DistanceHelper
 {
+	public static function betweenPostcodes($postcode1, $postcode2) {
+		return self::between($postcode1->latitude, $postcode1->longitude, $postcode2->latitude, $postcode2->longitude);
+	}
+
     public static function between($lat1, $lon1, $lat2, $lon2) {
-        $earthRadiusKm = 6371;
+        $p = 0.017453292519943295;    // Math.PI / 180
+        $a = 0.5 - cos(($lat2 - $lat1) * $p) /2 +
+            cos($lat1 * $p) * cos($lat2 * $p) *
+            (1 - cos(($lon2 - $lon1) * $p)) /2;
 
-        $dLat = self::degreesToRadians($lat2-$lat1);
-        $dLon = self::degreesToRadians($lon2-$lon1);
-
-        $lat1 = self::degreesToRadians($lat1);
-        $lat2 = self::degreesToRadians($lat2);
-
-        $a = sin($dLat/2) * sin($dLat/2) +
-            sin($dLon/2) * sin($dLon/2) * cos($lat1) * cos($lat2);
-        $c = 2 * atan2(sqrt($a), sqrt(1-$a));
-        return $earthRadiusKm * $c;
-    }
-
-    public static function degreesToRadians($degrees) {
-        return $degrees * 0.0174532925199433;
+        return round(12742 * asin(sqrt($a))); // 2 * R; R = 6371 km
     }
 }

@@ -14,22 +14,14 @@ export default class Form {
     }
 
     action(action) {
-        return new Promise((resolve, reject) => {
             this.isValidated();
             this.isSubmitting = true;
 
-            store.dispatch(action, this.data)
-                .then((response) => {
-                    this.onSuccess(response);
-                    resolve(response);
-                })
-                .catch((error) => {
-                    this.onFail(error);
-                });
-        });
+            store.dispatch(action, this.data, this.onSuccess(), this.onFail());
     }
 
     onSuccess(response) {
+        console.log('succes', response)
         this.successMessage = response.data.message;
         this.isSubmitting = false;
 
@@ -38,6 +30,7 @@ export default class Form {
     }
 
     onFail(error) {
+        console.log('error', error);
         this.isSubmitting = false;
 
         this.errors.record(error.response.data.errors);
@@ -50,4 +43,8 @@ export default class Form {
     isValidated(validated = true) {
         this.wasValidated = validated;
     }
+
+	isDisabled() {
+		return this.errors.hasErrors() || this.isSubmitting;
+	}
 }

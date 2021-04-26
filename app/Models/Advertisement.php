@@ -11,6 +11,8 @@ class Advertisement extends Model
 
     protected $table = 'advertisement';
 
+	protected $with = ['category', 'owner'];
+
     #region Relationships
 
     public function biddings() {
@@ -18,11 +20,11 @@ class Advertisement extends Model
     }
 
     public function owner() {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id')->select(['id', 'name', 'postcode_id']);
     }
 
     public function category() {
-        $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class);
     }
 
     #endregion Relationships

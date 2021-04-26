@@ -29,6 +29,7 @@ class AuthenticatedSessionController extends Controller
         return response()->json([
             'message' => 'login successful',
             'user' => auth()->user(),
+			'token' => $request->session()->get('_token'),
         ]);
     }
 
@@ -50,4 +51,18 @@ class AuthenticatedSessionController extends Controller
            'message' => 'logout successful'
        ]);
     }
+
+	/**
+	 * Checks if the user has an authenticated session
+	 * 
+	 * @param Request $request
+	 * @return JsonResponse
+	 */
+	public function checkAuth(Request $request) {
+		return response()->json([
+			'sessionHasToken' => $request->session()->has('_token'),
+			'auth' => Auth::check(),
+			'user' => Auth::user(),
+		]);
+	}
 }

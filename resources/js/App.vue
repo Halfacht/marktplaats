@@ -1,23 +1,24 @@
 <template>
-    <navigation></navigation>
+  <navigation></navigation>
 
-    <router-view></router-view>
+  <router-view></router-view>
 </template>
 
 <script>
-import Navigation from "./components/navigation.vue";
+import Navigation from "./components/Navigation.vue";
 
 export default {
-    components: {Navigation},
+  components: { Navigation },
 
-    computed: {
-        store() { // @todo: remove for production
-            return this.$store.state;
-        }
+  computed: {
+    store() {
+      // @todo: remove for production
+      return this.$store.state;
     },
+  },
 
-    created() {
-
-    },
+  created() {
+    this.$store.dispatch("retrieveUserFromSession");
+  },
 };
 </script>
