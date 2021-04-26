@@ -10,18 +10,16 @@ export default class Form {
 
         this.successMessage = '';
         this.isSubmitting = false;
-        this.wasValidated = false;
     }
 
     action(action) {
-            this.isValidated();
             this.isSubmitting = true;
 
-            store.dispatch(action, this.data, this.onSuccess(), this.onFail());
+            store.dispatch(action, this);
     }
 
     onSuccess(response) {
-        console.log('succes', response)
+        console.log('success', response)
         this.successMessage = response.data.message;
         this.isSubmitting = false;
 
@@ -38,10 +36,6 @@ export default class Form {
 
     reset() {
         this.data = this.originalData;
-    }
-
-    isValidated(validated = true) {
-        this.wasValidated = validated;
     }
 
 	isDisabled() {

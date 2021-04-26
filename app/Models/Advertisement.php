@@ -11,6 +11,8 @@ class Advertisement extends Model
 
     protected $table = 'advertisement';
 
+	protected $fillable = ['title', 'content', 'price', 'category_id', 'sort_date', 'user_id'];
+
 	protected $with = ['category', 'owner'];
 
     #region Relationships

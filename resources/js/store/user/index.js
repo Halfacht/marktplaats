@@ -1,6 +1,6 @@
 import axios from 'axios';
-import User from '../../classes/models/User';
 import router from '../../routes';
+import User from '../../classes/models/User';
 
 const state = {
     user: new User(),
@@ -22,19 +22,19 @@ const mutations = {
 }
 
 const actions = {
-    login({commit}, data, onSuccess, onFail) {
-		axios.post('api/login', data)
+    login({commit}, form) {
+		axios.post('api/login', form.data)
 			.then((response) => {
 				commit('UPDATE_USER', response.data.user);
 				router.push('/');
-			}).catch((error) => onFail(error));
+			}).catch((error) => form.onFail(error));
     },
-    register({commit}, data, onSuccess, onFail) {
+    register({commit}, form) {
 		axios.post('api/register', data)
 			.then((response) => {
 				commit('UPDATE_USER', response.data.user);
-				onSuccess(response);
-			}).catch((error) => onFail(error));
+				router.push('/');
+			}).catch((error) => form.onFail(error));
     },
     logout({commit}) {
         axios.post('api/logout')
@@ -44,8 +44,8 @@ const actions = {
             });
     },
 	retrieveUserFromSession({commit}) {
-		axios.get('api/check-auth')
-			.then((response) => console.log('session', response.data));
+		// axios.get('api/check-auth')
+		// 	.then((response) => console.log('session', response.data));
 	}
 }
 

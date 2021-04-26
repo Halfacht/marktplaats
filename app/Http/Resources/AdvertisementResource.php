@@ -23,6 +23,7 @@ class AdvertisementResource extends JsonResource
 			'sort_date' => $this->sort_date,
 			'owner' => new OwnerResource($this->owner),
 			'category' => $this->category->name,
+			'category_id' => $this->category_id,
 			'created_at' => $this->created_at,
 		];
     }

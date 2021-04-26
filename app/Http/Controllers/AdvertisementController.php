@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Advertisements\StoreAdvertisementRequest;
+use App\Http\Requests\Advertisements\UpdateAdvertisementRequest;
 use App\Http\Resources\AdvertisementResource;
 use App\Models\Advertisement;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdvertisementController extends Controller
 {
 public function __construct()
 {
-	// $this->middleware('auth')->only('index');
+	$this->middleware('auth')->except('index');
 }
 
     /**
@@ -26,59 +30,39 @@ public function __construct()
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  StoreAdvertisementRequest  $request
+     * @return JSONResponse
      */
-    public function store(Request $request)
+    public function store(StoreAdvertisementRequest $request)
     {
-        
+        $validatedData = $request->all();
+		$validatedData['sort_date'] = Carbon::now();
+		$validatedData['user_id'] = Auth::user()->id;
+
+		$advertiement = Advertisement::create($validatedData);
+
+		return response()->json([
+			'message' => 'advertisement created succesfully',
+			'advertisement' => new AdvertisementResource($advertiement),
+		]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Advertisement  $advertisement
-     * @return \Illuminate\Http\Response
+     * @param  Advertisement  $advertisement
+     * @return JSONResponse
      */
     public function show(Advertisement $advertisement)
     {
-        //
+        return new AdvertisementResource($advertisement);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Advertisement  $advertisement
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Advertisement $advertisement)
-    {
-        //
-    }
+	public function update(UpdateAdvertisementRequest $request) {
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Advertisement  $advertisement
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Advertisement $advertisement)
-    {
-        //
-    }
+	}
 
     /**
      * Remove the specified resource from storage.

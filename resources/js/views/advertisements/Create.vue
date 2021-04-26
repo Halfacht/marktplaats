@@ -7,6 +7,8 @@
       </div>
     </div>
 
+    <success-message :message="form.successMessage"></success-message>
+
     <form-component :form="form" class="col g-3">
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
@@ -53,8 +55,9 @@
           :class="{ 'is-invalid': form.errors.get('category_id') }"
           name="category_id"
           id="category_id"
-          v-model="form.data.category"
+          v-model="form.data.category_id"
         >
+          <option disabled value="">Select a category</option>
           <option v-for="category in categories" :value="category.id">
             {{ category.name }}
           </option>
@@ -67,7 +70,7 @@
         class="btn btn-success"
         @click.prevent="submit"
       >
-        Add Advertisement
+        {{ id ? "Update Advertisement" : "Add Advertisement" }}
       </button>
     </form-component>
   </div>
@@ -76,32 +79,41 @@
 <script>
 import { mapGetters } from "vuex";
 import SuccessMessage from "../../components/parts/SuccessMessage.vue";
-import defaultData from "../../classes/models/Advertisement";
 import FormComponent from "../../components/parts/FormComponent";
+import FormError from "../../components/parts/FormError";
+import { DEFAULT_DATA } from "../../classes/models/Advertisement";
 
 export default {
-  components: { SuccessMessage, FormComponent },
+  components: { SuccessMessage, FormComponent, FormError },
 
   props: ["id"],
 
-  data() {
-    return {
-      form: new Form(defaultData),
-    };
-  },
+ 
 
   computed: {
-    ...mapGetters(["categories"]),
+    ...mapGetters(["advertisementById", "categories"]),
+
+    form() {
+      return this.id
+        ? new Form(this.advertisementById(this.id))
+        : new Form(DEFAULT_DATA);
+    },
   },
 
   methods: {
     submit() {
-      this.form.action("addAdvertisement");
+      this.id ? this.update() : this.store();
+    },
+    store() {
+      this.form.action("storeAdvertisement");
+    },
+    update() {
+      this.form.action("updateAdvertisement");
     },
   },
 
   created() {
-    this.$store.dispatch("getCategories")
+    this.$store.dispatch("getCategories");
   },
 };
 </script>

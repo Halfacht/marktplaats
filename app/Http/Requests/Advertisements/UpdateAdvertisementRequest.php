@@ -2,11 +2,12 @@
 
 namespace App\Http\Requests\Advertisements;
 
+use App\Models\Advertisement;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 
-class StoreAdvertisementRequest extends FormRequest
+class UpdateAdvertisementRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,7 +16,7 @@ class StoreAdvertisementRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::check();
+        return Auth::check() && Auth::user()->id === Advertisement::find($this->route('advertisement'))->id;
     }
 
     /**
@@ -25,7 +26,7 @@ class StoreAdvertisementRequest extends FormRequest
      */
     public function rules()
     {
-        return [
+		return [
             'title' => ['required', 'string'],
 			'content' => ['required', 'string'],
 			'price' => ['required', 'integer'],
