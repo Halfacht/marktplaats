@@ -95,22 +95,25 @@ export default {
     return {
       form: new Form({
         amount: "",
+		advertisement_id: this.id,
       }),
     };
   },
 
   computed: {
-    ...mapGetters(["advertisementById", "auth"]),
-
-    advertisement() {
-      return this.advertisementById(this.id);
-    },
+    ...mapGetters(["advertisement", "auth"]),
   },
 
   methods: {
     submit() {
-      //
+		console.log('submitting');
+		
+      this.form.action("storeBidding");
     },
   },
+
+  created() {
+	  this.$store.dispatch('getAdvertisement', this.id)
+  }
 };
 </script>

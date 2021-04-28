@@ -15,7 +15,7 @@
           </thead>
           <tbody>
             <tr v-for="advertisement in userAdvertisements.items">
-              <!-- <th>{{ advertisement.id }}</th> -->
+              <th>{{ advertisement.id }}</th>
               <td>{{ advertisement.title }}</td>
               <td>€ {{ advertisement.price }}</td>
               <td>{{ advertisement.createdAt }}</td>

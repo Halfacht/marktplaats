@@ -1,4 +1,5 @@
 import moment from "moment";
+import Model from "./Model";
 
 export const DEFAULT_DATA = {
 	title: '',
@@ -10,9 +11,9 @@ export const DEFAULT_DATA = {
 	category_id: null,
 }
 
-export default class Advertisement {
+export default class Advertisement extends Model {
 	constructor(advertisement = DEFAULT_DATA) {
-		Object.assign(this, advertisement)
+		super(advertisement);
 	}
 
 	get momentAgo() {

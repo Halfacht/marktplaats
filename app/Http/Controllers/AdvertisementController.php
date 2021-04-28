@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Advertisements\StoreAdvertisementRequest;
 use App\Http\Requests\Advertisements\UpdateAdvertisementRequest;
+use App\Http\Resources\AdvertisementCollectionResource;
 use App\Http\Resources\AdvertisementResource;
 use App\Models\Advertisement;
 use Carbon\Carbon;
@@ -18,15 +19,21 @@ public function __construct()
 }
 
     /**
-     * Display a listing of the resource.
+     * Return a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+	 * @param Request $request
+     * @return JSONResponse
      */
-    public function index()
+    public function index(Request $request)
     {
-        $advertisements = Advertisement::inRandomOrder()->limit(10)->get();
+		$categoryString = $request->query('categories');
+        $advertisements = Advertisement::orderByDesc('sort_date')
+			->when($categoryString, function ($query, $categoryString) {
+				return $query->whereIn('category_id', explode(',', $categoryString));
+			})
+			->paginate();
 
-		return AdvertisementResource::collection($advertisements);
+		return new AdvertisementCollectionResource($advertisements);
     }
 
     /**

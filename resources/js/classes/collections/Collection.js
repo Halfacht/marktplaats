@@ -16,6 +16,10 @@ export default class Collection {
 	}
 
 	byId(id) {
+		if (typeof id === 'string') {
+            id = parseInt(id)
+        }
+		
 		return this.items.find(x => x.id === id);
 	}
 

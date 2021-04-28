@@ -1,4 +1,5 @@
 import axios from 'axios';
+import store from "../../store";
 
 const state = {
     categories: [],
@@ -6,6 +7,10 @@ const state = {
 
 const getters = {
     categories: state => {
+		if (state.categories.length <= 0) {
+			store.dispatch("getCategories"); 	
+		}
+
         return state.categories;
     }
 };

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AdvertisementController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\BiddingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\UserAdvertisementController;
 use Illuminate\Support\Facades\Route;
@@ -20,9 +21,9 @@ use Illuminate\Support\Facades\Route;
 Route::resource('advertisements', AdvertisementController::class)->except(['create', 'edit']);
 Route::get('user-advertisements', [UserAdvertisementController::class, 'index'])->middleware('auth');
 
-Route::get('categories', [CategoryController::class, 'index'])->middleware('auth');
+Route::get('categories', [CategoryController::class, 'index']);
 
-Route::post('advertisements/{advertisement}/biddings', )
+Route::post('advertisements/{advertisement}/biddings', [BiddingController::class, 'store'])->middleware('auth');
 
 Route::get('check-auth', [AuthenticatedSessionController::class, 'checkAuth']);
 

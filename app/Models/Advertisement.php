@@ -18,7 +18,7 @@ class Advertisement extends Model
     #region Relationships
 
     public function biddings() {
-        return $this->hasMany(Bidding::class);
+        return $this->hasMany(Bidding::class)->orderByDesc('created_at');
     }
 
     public function owner() {

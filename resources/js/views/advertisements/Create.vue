@@ -91,11 +91,11 @@ export default {
  
 
   computed: {
-    ...mapGetters(["advertisementById", "categories"]),
+    ...mapGetters(["userAdvertisementById", "categories"]),
 
     form() {
       return this.id
-        ? new Form(this.advertisementById(this.id))
+        ? new Form(this.userAdvertisementById(this.id))
         : new Form(DEFAULT_DATA);
     },
   },
@@ -110,10 +110,6 @@ export default {
     update() {
       this.form.action("updateAdvertisement");
     },
-  },
-
-  created() {
-    this.$store.dispatch("getCategories");
   },
 };
 </script>

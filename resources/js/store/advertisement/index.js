@@ -3,12 +3,14 @@ import store from "../../store";
 import router from '../../routes';
 import Advertisement from "../../classes/models/Advertisement";
 import DEFAULT_DATA from "../../classes/models/Advertisement";
+import Paginator from "../../classes/utilities/Paginator";
 import AdvertisementCollection from "../../classes/collections/AdvertisementCollection";
 
 const state = {
     advertisements: new AdvertisementCollection(),
 	userAdvertisements: new AdvertisementCollection(),
 	advertisement: new Advertisement(),
+	paginator: new Paginator(),
 }
 
 const getters = {
@@ -16,36 +18,34 @@ const getters = {
         return state.advertisements;
     },
     userAdvertisements(state) {
-        let advertisements = state.userAdvertisements;
-
-		if (advertisements.isEmpty()) {
+		if (state.userAdvertisements.isEmpty()) {
 			store.dispatch('getUserAdvertisements');
 		}
 
-		return advertisements;
+		return state.userAdvertisements;
     },
-	advertisementById: (state) => (id) => {
-		if (typeof id === 'string') {
-            id = parseInt(id)
-        }
-
-		if (state.advertisement.id === id) {
-			return state.advertisement;
+	userAdvertisementById: (state) => (id) =>  {
+		let advertisement = state.userAdvertisements.byId(id) ?? state.advertisement;
+		
+		if (!advertisement && !advertisement.hasId(id)) {
+			store.dispatch('getAdvertisement', id);
+			advertisement = new Advertisement(DEFAULT_DATA);
 		}
-
-		let advertisement = state.advertisements.byId(id) ?? state.userAdvertisements.byId(id);
-
-		if (!advertisement) {
-			store.dispatch('getAdvertisement', id)
-		}
-
-		return advertisement ?? new Advertisement(DEFAULT_DATA);
+		
+		return advertisement; 
 	},
+	advertisement(state) {
+		return state.advertisement;
+	},
+	paginator(state) {
+		return state.paginator;
+	}
 }
 
 const mutations = {
     SET_ADVERTISEMENTS(state, payload) {
 		state.advertisements = new AdvertisementCollection(payload.data.map(item => new Advertisement(item)));	
+		state.paginator = new Paginator(payload);
     },
 	SET_USER_ADVERTISEMENTS(state, payload) {
 		state.userAdvertisements = new AdvertisementCollection(payload.data.map(item => new Advertisement(item)));
@@ -53,11 +53,11 @@ const mutations = {
 	SET_ADVERTISEMENT(state, payload) {
 		state.advertisement = new Advertisement(payload.data);
 	},
-	UPDATE_USER_ADVERTISEMENT(state, payload) {
-		state.userAdvertisements.update(payload.data.id, payload.data);
-	},
 	ADD_USER_ADVERTISEMENT(state, payload) {
 		state.userAdvertisements.add(new Advertisement(payload.data))
+	},
+	UPDATE_USER_ADVERTISEMENT(state, payload) {
+		state.userAdvertisements.update(payload.data.id, payload.data);
 	},
 	DELETE_ADVERTISEMENT(state, id) {
 		state.userAdvertisements.delete(id);
@@ -65,9 +65,17 @@ const mutations = {
 }
 
 const actions = {
-    getAdvertisements({commit}) {
-        axios.get('/api/advertisements')
-            .then((response) => commit('SET_ADVERTISEMENTS', response.data));
+    getAdvertisements({commit}, filter) {
+		let queryString = store.getters.paginator.queryString;
+		if (filter) {
+			queryString = queryString.concat('&categories=');
+			queryString = queryString.concat(filter.join());
+		}
+
+        axios.get(`/api/advertisements?${queryString}`)
+            .then((response) => {
+				commit('SET_ADVERTISEMENTS', response.data)
+			});
     },
     getAdvertisement({commit}, id) {
 		axios.get('/api/advertisements/' + id)
@@ -96,6 +104,17 @@ const actions = {
 	deleteAdvertisement({commit}, id) {
 		axios.delete(`/api/advertisements/${id}`)
 			.then(commit('DELETE_ADVERTISEMENT', id));
+	},
+	storeBidding({commit}, form) {
+		console.log('inaction form:', form);
+		
+		axios.post(`/api/advertisements/${form.data.advertisement_id}/biddings`, form.data)
+			.then((response) => {
+				console.log('response', response);
+				
+				commit('SET_ADVERTISEMENT', response.data)
+				form.onSuccess(response.data.message)
+			});
 	}
 }
 
