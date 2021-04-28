@@ -11,15 +11,12 @@ export default class Collection {
 		this.items[this.keyOfId(id)] = item;
 	}
 
-	delete() {
-		delete this.items[this.keyOfId(id)];
+	delete(id) {	
+		this.items.splice(this.keyOfId(id), 1);
 	}
 
 	byId(id) {
-
-		let item = this.items.find(x => x.id === id);
-		console.log('item', item);
-		return item;
+		return this.items.find(x => x.id === id);
 	}
 
 	keyOfId(id) {

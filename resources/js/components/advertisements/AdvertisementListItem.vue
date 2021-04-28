@@ -1,7 +1,14 @@
 <template>
   <div class="row mb-3">
     <div class="col-8 card p-2">
-      <a class="h4">{{ advertisement.title }}</a>
+      <router-link
+        class="h4"
+        :to="{
+          name: 'advertisements.show',
+          params: { id: advertisement.id },
+        }"
+        >{{ advertisement.title }}
+      </router-link>
       <p>{{ short(advertisement.content) }}</p>
     </div>
     <div class="col card p-2">
@@ -11,7 +18,9 @@
     <div class="col card p-2">
       <p class="fw-bold">{{ advertisement.owner?.name }}</p>
       <p>{{ advertisement.owner?.town }}</p>
-	  <p v-if="advertisement.owner?.distance">{{ advertisement.owner.distance}} km</p>
+      <p v-if="advertisement.owner?.distance">
+        {{ advertisement.owner.distance }} km
+      </p>
     </div>
   </div>
 </template>

@@ -22,6 +22,8 @@ Route::get('user-advertisements', [UserAdvertisementController::class, 'index'])
 
 Route::get('categories', [CategoryController::class, 'index'])->middleware('auth');
 
+Route::post('advertisements/{advertisement}/biddings', )
+
 Route::get('check-auth', [AuthenticatedSessionController::class, 'checkAuth']);
 
 require __DIR__.'/auth.php';

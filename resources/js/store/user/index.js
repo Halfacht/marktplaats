@@ -30,7 +30,7 @@ const actions = {
 			}).catch((error) => form.onFail(error));
     },
     register({commit}, form) {
-		axios.post('api/register', data)
+		axios.post('api/register', form.data)
 			.then((response) => {
 				commit('UPDATE_USER', response.data.user);
 				router.push('/');

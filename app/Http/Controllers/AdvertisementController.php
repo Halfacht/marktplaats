@@ -14,7 +14,7 @@ class AdvertisementController extends Controller
 {
 public function __construct()
 {
-	$this->middleware('auth')->except('index');
+	$this->middleware('auth')->except('index', 'show');
 }
 
     /**
@@ -57,6 +57,8 @@ public function __construct()
      */
     public function show(Advertisement $advertisement)
     {
+		$advertisement->load('biddings');
+
         return new AdvertisementResource($advertisement);
     }
 
@@ -74,11 +76,15 @@ public function __construct()
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Advertisement  $advertisement
-     * @return \Illuminate\Http\Response
+     * @param  Advertisement  $advertisement
+     * @return JSONResponse
      */
     public function destroy(Advertisement $advertisement)
     {
-        //
+        $advertisement->delete();
+
+		return response()->json([
+			'message' => 'deleting was successful'
+		]);
     }
 }

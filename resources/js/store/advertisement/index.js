@@ -8,6 +8,7 @@ import AdvertisementCollection from "../../classes/collections/AdvertisementColl
 const state = {
     advertisements: new AdvertisementCollection(),
 	userAdvertisements: new AdvertisementCollection(),
+	advertisement: new Advertisement(),
 }
 
 const getters = {
@@ -23,30 +24,34 @@ const getters = {
 
 		return advertisements;
     },
-	advertisement(state) {
-		return state.advertisement;
-	},
-	advertisementById: (state) => (id) =>  {
+	advertisementById: (state) => (id) => {
 		if (typeof id === 'string') {
             id = parseInt(id)
         }
 
-		let advertisement = state.userAdvertisements.byId(id);
-		
-		if (!advertisement) {
-			store.dispatch('getAdvertisement', id);
+		if (state.advertisement.id === id) {
+			return state.advertisement;
 		}
-		
+
+		let advertisement = state.advertisements.byId(id) ?? state.userAdvertisements.byId(id);
+
+		if (!advertisement) {
+			store.dispatch('getAdvertisement', id)
+		}
+
 		return advertisement ?? new Advertisement(DEFAULT_DATA);
-	}
+	},
 }
 
 const mutations = {
-    UPDATE_ADVERTISEMENTS(state, payload) {
+    SET_ADVERTISEMENTS(state, payload) {
 		state.advertisements = new AdvertisementCollection(payload.data.map(item => new Advertisement(item)));	
     },
-	UPDATE_USER_ADVERTISEMENTS(state, payload) {
+	SET_USER_ADVERTISEMENTS(state, payload) {
 		state.userAdvertisements = new AdvertisementCollection(payload.data.map(item => new Advertisement(item)));
+	},
+	SET_ADVERTISEMENT(state, payload) {
+		state.advertisement = new Advertisement(payload.data);
 	},
 	UPDATE_USER_ADVERTISEMENT(state, payload) {
 		state.userAdvertisements.update(payload.data.id, payload.data);
@@ -62,20 +67,23 @@ const mutations = {
 const actions = {
     getAdvertisements({commit}) {
         axios.get('/api/advertisements')
-            .then((response) => commit('UPDATE_ADVERTISEMENTS', response.data));
+            .then((response) => commit('SET_ADVERTISEMENTS', response.data));
     },
     getAdvertisement({commit}, id) {
 		axios.get('/api/advertisements/' + id)
-			.then(response => commit('ADD_USER_ADVERTISEMENT', response.data));
+			.then(response => commit('SET_ADVERTISEMENT', response.data));
     },
 	getUserAdvertisements({commit}) {
 		axios.get('/api/user-advertisements')
-			.then((response) => commit('UPDATE_USER_ADVERTISEMENTS', response.data));
+			.then((response) => commit('SET_USER_ADVERTISEMENTS', response.data));
 	},
     storeAdvertisement({commit}, form) {
-            axios.post('/api/advertisements', form.data)
-                .then((response) => form.onSuccess(response))
-            	.catch((error) => form.onFail(error));
+		axios.post('/api/advertisements', form.data)
+			.then((response) => {
+				commit('ADD_USER_ADVERTISEMENT', response.data);
+				router.push('/user/advertisements')
+			})
+			.catch((error) => form.onFail(error));
     },
 	updateAdvertisement({commit}, form) {
 		axios.put(`/api/advertisements/${form.data.id}`, form.data)
@@ -87,7 +95,7 @@ const actions = {
 	},
 	deleteAdvertisement({commit}, id) {
 		axios.delete(`/api/advertisements/${id}`)
-			.then((response) => commit('DELETE_ADVERTISEMENT', id));
+			.then(commit('DELETE_ADVERTISEMENT', id));
 	}
 }
 

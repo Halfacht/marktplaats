@@ -4,6 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\OwnerResource;
+use App\Http\Resources\BiddingResource;
 
 class AdvertisementResource extends JsonResource
 {
@@ -21,9 +22,10 @@ class AdvertisementResource extends JsonResource
 			'content' => $this->content,
 			'price' => $this->price,
 			'sort_date' => $this->sort_date,
-			'owner' => new OwnerResource($this->owner),
 			'category' => $this->category->name,
 			'category_id' => $this->category_id,
+			'owner' => new OwnerResource($this->owner),
+			'biddings' => BiddingResource::collection($this->whenLoaded('biddings')),
 			'created_at' => $this->created_at,
 		];
     }
