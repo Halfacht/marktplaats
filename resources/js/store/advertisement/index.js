@@ -10,7 +10,7 @@ const state = {
     advertisements: new AdvertisementCollection(),
 	userAdvertisements: new AdvertisementCollection(),
 	advertisement: new Advertisement(),
-	paginator: new Paginator(),
+	paginator: new Paginator('getAdvertisements'),
 }
 
 const getters = {
@@ -45,7 +45,7 @@ const getters = {
 const mutations = {
     SET_ADVERTISEMENTS(state, payload) {
 		state.advertisements = new AdvertisementCollection(payload.data.map(item => new Advertisement(item)));	
-		state.paginator = new Paginator(payload);
+		state.paginator = new Paginator('getAdvertisements', payload);
     },
 	SET_USER_ADVERTISEMENTS(state, payload) {
 		state.userAdvertisements = new AdvertisementCollection(payload.data.map(item => new Advertisement(item)));
@@ -65,11 +65,16 @@ const mutations = {
 }
 
 const actions = {
-    getAdvertisements({commit}, filter) {
-		let queryString = store.getters.paginator.queryString;
-		if (filter) {
+    getAdvertisements({commit}, options) {
+		let queryString = store.getters.paginator.queryString();
+		if (options?.filter) {
 			queryString = queryString.concat('&categories=');
-			queryString = queryString.concat(filter.join());
+			queryString = queryString.concat(options.filter.join());
+		}
+
+		if (options?.postcode && options?.distance) {
+			queryString = queryString.concat(`&postcode=${options.postcode}`);
+			queryString = queryString.concat(`&distance=${options.distance}`);
 		}
 
         axios.get(`/api/advertisements?${queryString}`)

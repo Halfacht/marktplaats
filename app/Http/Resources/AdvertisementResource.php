@@ -27,6 +27,7 @@ class AdvertisementResource extends JsonResource
 			'owner' => new OwnerResource($this->owner),
 			'biddings' => BiddingResource::collection($this->whenLoaded('biddings')),
 			'created_at' => $this->created_at,
+			'distance' => $this->distance,
 		];
     }
 }

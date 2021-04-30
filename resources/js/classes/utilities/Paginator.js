@@ -1,3 +1,5 @@
+import store from '../../store';
+
 export const DEFAULT_DATA = {
 	current_page: 1,
 	last_page: null,
@@ -5,16 +7,44 @@ export const DEFAULT_DATA = {
 }
 
 export default class Paginator {
-	constructor(data = DEFAULT_DATA) {
-		let acc = {}
-		for (const property in DEFAULT_DATA) {
-			acc[property] = data[property];
-		}
-
-		Object.assign(this, acc);
+	constructor(action, data = DEFAULT_DATA) {		
+		this.action = action;
+		this.update(data);		
 	}
 
-	get queryString() {
-		return `page=${this.current_page}&per_page=${this.per_page}`; 
+	update(data) {
+		for (const property in DEFAULT_DATA) {
+			this[property] = data[property];
+		}
+	}
+
+	queryString(page = this.current_page) {
+		return `page=${page}&per_page=${this.per_page}`; 
+	}
+
+	hasNext() {
+		return this.last_page > this.current_page;
+	}
+
+	hasPrevious() {
+		return this.current_page > 1;
+	}
+
+	next() {
+		if (this.hasNext()) {
+			this.current_page++;
+			this.dispatch();
+		}
+	}
+
+	previous() {
+		if (this.hasPrevious()) {
+			this.current_page--;
+			this.dispatch();
+		}
+	}
+
+	dispatch() {
+		store.dispatch(this.action);
 	}
 }

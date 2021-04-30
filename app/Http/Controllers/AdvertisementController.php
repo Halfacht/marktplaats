@@ -31,7 +31,7 @@ public function __construct()
 			->when($categoryString, function ($query, $categoryString) {
 				return $query->whereIn('category_id', explode(',', $categoryString));
 			})
-			->paginate();
+			->paginate($request->query('per_page'));
 
 		return new AdvertisementCollectionResource($advertisements);
     }
