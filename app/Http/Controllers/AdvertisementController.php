@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Advertisements\GetAdvertisementsRequest;
 use App\Http\Requests\Advertisements\StoreAdvertisementRequest;
 use App\Http\Requests\Advertisements\UpdateAdvertisementRequest;
 use App\Http\Resources\AdvertisementCollectionResource;
 use App\Http\Resources\AdvertisementResource;
 use App\Models\Advertisement;
 use App\Models\Postcode;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,35 +24,40 @@ public function __construct()
     /**
      * Return a listing of the resource.
      *
-	 * @param Request $request
+	 * @param GetAdvertisementsRequest $request
      * @return JSONResponse
      */
-    public function index(Request $request)
+    public function index(GetAdvertisementsRequest $request)
     {
 		$categoryString = $request->query('categories');
-		$postcodeDigits = $request->query('postcode');
-		$maxDistance = $request->query('distance');
+		$postcodeDigits = $request->query('fromPostcode');
+		$maxDistance = $request->query('maxDistance');
+
+		$users_within_range = null;
+
+		if ($postcodeDigits && $maxDistance) {
+			$postcode = Postcode::where('postcode', $postcodeDigits)->first();
+		
+			$users_within_range = User::withDistanceFromPostcode($maxDistance, $postcode)
+				->has('advertisements')
+				->get();
+		}
 
         $advertisements = Advertisement::orderByDesc('sort_date')
 			->when($categoryString, function ($query, $categoryString) {
 				return $query->whereIn('category_id', explode(',', $categoryString));
 			})
-			->when($postcodeDigits && $maxDistance, function ($query) use ($postcodeDigits, $maxDistance) {
-				$postcode = Postcode::where('postcode', 9721);
-				return $query->selectRaw(
-					'( 6371 * acos( cos( radians(?) ) * cos( radians( 
-						(SELECT @latitude := FROM postcodes WHERE postcode = ?) 
-					) ) 
-					* cos( radians( 
-						(SELECT longitude FROM postcodes WHERE postcode = ?)
-					 ) - radians(?) ) 
-					+ sin( radians(?) ) * sin( radians(  @latitude  ) ) ) ) AS distance',
-					[$postcode->latitude, $postcodeDigits, $postcodeDigits, $postcode->longitude, $postcode->latitude]
-				);
+			->when($users_within_range, function ($query) use ($users_within_range) {
+				return $query->whereIn('user_id', $users_within_range->pluck('id'));
 			})
 			->paginate($request->query('per_page'));
-
-			// $sql = "SELECT *, ( 3959 * acos( cos( radians(" . $lat . ") ) * cos( radians( lat ) ) * cos( radians( lng ) - radians(" . $lng . ") ) + sin( radians(" . $lat . ") ) * sin( radians( lat ) ) ) ) AS distance FROM your_table HAVING distance < 5";
+		
+		// Merge distance into advertisements
+		if ($users_within_range) {
+			$advertisements->each(function ($advertiement) use ($users_within_range) {
+				$advertiement->distance = round($users_within_range->firstWhere('id', $advertiement->user_id)->distance);
+			});
+		}
 
 		return new AdvertisementCollectionResource($advertisements);
     }

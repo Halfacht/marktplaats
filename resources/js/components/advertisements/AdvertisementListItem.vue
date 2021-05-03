@@ -18,8 +18,8 @@
     <div class="col card p-2">
       <p class="fw-bold">{{ advertisement.owner?.name }}</p>
       <p>{{ advertisement.owner?.town }}</p>
-      <p v-if="advertisement.owner?.distance">
-        {{ advertisement.owner.distance }} km
+      <p v-if="advertisement.distance">
+        {{ advertisement.distance }} km
       </p>
     </div>
   </div>

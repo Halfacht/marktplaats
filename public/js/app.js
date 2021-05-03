@@ -16712,8 +16712,8 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
     return {
       options: {
         filter: [],
-        postcode: null,
-        distance: null
+        fromPostcode: null,
+        maxDistance: null
       }
     };
   },
@@ -17410,7 +17410,7 @@ var _hoisted_7 = {
   key: 0
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  var _$props$advertisement, _$props$advertisement2, _$props$advertisement3;
+  var _$props$advertisement, _$props$advertisement2;
 
   var _component_router_link = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("router-link");
 
@@ -17443,7 +17443,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   /* TEXT */
   ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)((_$props$advertisement2 = $props.advertisement.owner) === null || _$props$advertisement2 === void 0 ? void 0 : _$props$advertisement2.town), 1
   /* TEXT */
-  ), (_$props$advertisement3 = $props.advertisement.owner) !== null && _$props$advertisement3 !== void 0 && _$props$advertisement3.distance ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("p", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.advertisement.owner.distance) + " km ", 1
+  ), $props.advertisement.distance ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("p", _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($props.advertisement.distance) + " km ", 1
   /* TEXT */
   )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]);
 }
@@ -17480,13 +17480,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, null, 8
   /* PROPS */
   , ["modelValue"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_advertisement_distance_search, {
-    postcode: $data.options.postcode,
+    postcode: $data.options.fromPostcode,
     "onUpdate:postcode": _cache[2] || (_cache[2] = function ($event) {
-      return $data.options.postcode = $event;
+      return $data.options.fromPostcode = $event;
     }),
-    distance: $data.options.distance,
+    distance: $data.options.maxDistance,
     "onUpdate:distance": _cache[3] || (_cache[3] = function ($event) {
-      return $data.options.distance = $event;
+      return $data.options.maxDistance = $event;
     }),
     onSearch: $options.search
   }, null, 8
@@ -19223,9 +19223,9 @@ var actions = {
       queryString = queryString.concat(options.filter.join());
     }
 
-    if (options !== null && options !== void 0 && options.postcode && options !== null && options !== void 0 && options.distance) {
-      queryString = queryString.concat("&postcode=".concat(options.postcode));
-      queryString = queryString.concat("&distance=".concat(options.distance));
+    if (options !== null && options !== void 0 && options.fromPostcode && options !== null && options !== void 0 && options.maxDistance) {
+      queryString = queryString.concat("&fromPostcode=".concat(options.fromFostcode));
+      queryString = queryString.concat("&maxDistance=".concat(options.maxDistance));
     }
 
     axios__WEBPACK_IMPORTED_MODULE_0___default().get("/api/advertisements?".concat(queryString)).then(function (response) {

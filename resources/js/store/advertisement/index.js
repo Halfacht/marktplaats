@@ -72,9 +72,9 @@ const actions = {
 			queryString = queryString.concat(options.filter.join());
 		}
 
-		if (options?.postcode && options?.distance) {
-			queryString = queryString.concat(`&postcode=${options.postcode}`);
-			queryString = queryString.concat(`&distance=${options.distance}`);
+		if (options?.fromPostcode && options?.maxDistance) {
+			queryString = queryString.concat(`&fromPostcode=${options.fromFostcode}`);
+			queryString = queryString.concat(`&maxDistance=${options.maxDistance}`);
 		}
 
         axios.get(`/api/advertisements?${queryString}`)

@@ -21,7 +21,6 @@ class OwnerResource extends JsonResource
 			'name' => $this->name,
 			'postcode' => $this->postcode->postcode,
 			'town' => $this->postcode->town,
-			'distance' => Auth::check() ? DistanceHelper::betweenPostcodes(Auth::user()->postcode, $this->postcode) : null,
 		];
     }
 }

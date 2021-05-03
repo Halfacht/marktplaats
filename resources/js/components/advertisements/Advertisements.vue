@@ -1,8 +1,8 @@
 <template>
   <advertisements-filter v-model="options.filter"></advertisements-filter>
   <advertisement-distance-search
-    v-model:postcode="options.postcode"
-    v-model:distance="options.distance"
+    v-model:postcode="options.fromPostcode"
+    v-model:distance="options.maxDistance"
     @search="search"
   ></advertisement-distance-search>
   <advertisement-list-item
@@ -31,8 +31,8 @@ export default {
     return {
       options: {
         filter: [],
-        postcode: null,
-        distance: null,
+        fromPostcode: null,
+        maxDistance: null,
       },
     };
   },

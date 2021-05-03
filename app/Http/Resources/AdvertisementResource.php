@@ -2,9 +2,11 @@
 
 namespace App\Http\Resources;
 
+use App\Helpers\DistanceHelper;
 use Illuminate\Http\Resources\Json\JsonResource;
 use App\Http\Resources\OwnerResource;
 use App\Http\Resources\BiddingResource;
+use Illuminate\Support\Facades\Auth;
 
 class AdvertisementResource extends JsonResource
 {
@@ -27,7 +29,7 @@ class AdvertisementResource extends JsonResource
 			'owner' => new OwnerResource($this->owner),
 			'biddings' => BiddingResource::collection($this->whenLoaded('biddings')),
 			'created_at' => $this->created_at,
-			'distance' => $this->distance,
+			'distance' => $this->distance ?? Auth::check() ? DistanceHelper::betweenPostcodes(Auth::user()->postcode, $this->owner->postcode) : null,
 		];
     }
 }
