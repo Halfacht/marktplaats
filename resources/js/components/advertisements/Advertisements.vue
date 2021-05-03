@@ -9,7 +9,7 @@
     v-for="advertisement in advertisements.items"
     :advertisement="advertisement"
   ></advertisement-list-item>
-  <advertisement-pages></advertisement-pages>
+  <advertisement-pages @changePage="getAdvertisements"></advertisement-pages>
 </template>
 
 <script>
@@ -42,16 +42,22 @@ export default {
   },
 
   methods: {
-    search() {},
+    search() {
+		this.$store.dispatch("resetPaginator");
+		this.getAdvertisements();
+	},
+	getAdvertisements() {
+		this.$store.dispatch("getAdvertisements", this.options);
+	},
   },
 
   created() {
-    this.$store.dispatch("getAdvertisements");
+    this.getAdvertisements();
   },
 
   watch: {
     "options.filter": function (newValue, oldValue) {
-      this.$store.dispatch("getAdvertisements", this.options);
+      this.search();
     },
   },
 };

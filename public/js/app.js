@@ -16719,14 +16719,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_4__.mapGetters)(["advertisements", "paginator"])),
   methods: {
-    search: function search() {}
+    search: function search() {
+      this.$store.dispatch("resetPaginator");
+      this.getAdvertisements();
+    },
+    getAdvertisements: function getAdvertisements() {
+      this.$store.dispatch("getAdvertisements", this.options);
+    }
   },
   created: function created() {
-    this.$store.dispatch("getAdvertisements");
+    this.getAdvertisements();
   },
   watch: {
     "options.filter": function optionsFilter(newValue, oldValue) {
-      this.$store.dispatch("getAdvertisements", this.options);
+      this.search();
     }
   }
 });
@@ -16836,13 +16842,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  emits: ['changePage'],
   computed: _objectSpread({}, (0,vuex__WEBPACK_IMPORTED_MODULE_0__.mapGetters)(["paginator"])),
   methods: {
     next: function next() {
-      if (this.paginator.hasNext()) {}
+      if (this.paginator.hasNext()) {
+        this.paginator.next();
+        this.$emit('changePage');
+      }
     },
     previous: function previous() {
-      if (this.paginator.hasPrevious()) {}
+      if (this.paginator.hasPrevious()) {
+        this.paginator.previous();
+        this.$emit('changePage');
+      }
     }
   }
 });
@@ -17499,7 +17512,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     , ["advertisement"]);
   }), 256
   /* UNKEYED_FRAGMENT */
-  )), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_advertisement_pages)], 64
+  )), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_advertisement_pages, {
+    onChangePage: $options.getAdvertisements
+  }, null, 8
+  /* PROPS */
+  , ["onChangePage"])], 64
   /* STABLE_FRAGMENT */
   );
 }
@@ -17642,14 +17659,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("p", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("a", {
     "class": _ctx.paginator.hasPrevious() ? 'text-success' : 'text-muted',
     onClick: _cache[1] || (_cache[1] = function ($event) {
-      return _ctx.paginator.previous();
+      return $options.previous();
     })
   }, "Previous", 2
   /* CLASS */
   ), _hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)("a", {
     "class": _ctx.paginator.hasNext() ? 'text-success' : 'text-muted',
     onClick: _cache[2] || (_cache[2] = function ($event) {
-      return _ctx.paginator.next();
+      return $options.next();
     })
   }, "Next", 2
   /* CLASS */
@@ -18952,13 +18969,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "DEFAULT_DATA": () => (/* binding */ DEFAULT_DATA),
 /* harmony export */   "default": () => (/* binding */ Paginator)
 /* harmony export */ });
-/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../store */ "./resources/js/store/index.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
 
 var DEFAULT_DATA = {
   current_page: 1,
@@ -18967,12 +18982,11 @@ var DEFAULT_DATA = {
 };
 
 var Paginator = /*#__PURE__*/function () {
-  function Paginator(action) {
-    var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : DEFAULT_DATA;
+  function Paginator() {
+    var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : DEFAULT_DATA;
 
     _classCallCheck(this, Paginator);
 
-    this.action = action;
     this.update(data);
   }
 
@@ -19004,7 +19018,6 @@ var Paginator = /*#__PURE__*/function () {
     value: function next() {
       if (this.hasNext()) {
         this.current_page++;
-        this.dispatch();
       }
     }
   }, {
@@ -19012,13 +19025,7 @@ var Paginator = /*#__PURE__*/function () {
     value: function previous() {
       if (this.hasPrevious()) {
         this.current_page--;
-        this.dispatch();
       }
-    }
-  }, {
-    key: "dispatch",
-    value: function dispatch() {
-      _store__WEBPACK_IMPORTED_MODULE_0__.default.dispatch(this.action);
     }
   }]);
 
@@ -19154,7 +19161,7 @@ var state = {
   advertisements: new _classes_collections_AdvertisementCollection__WEBPACK_IMPORTED_MODULE_5__.default(),
   userAdvertisements: new _classes_collections_AdvertisementCollection__WEBPACK_IMPORTED_MODULE_5__.default(),
   advertisement: new _classes_models_Advertisement__WEBPACK_IMPORTED_MODULE_3__.default(),
-  paginator: new _classes_utilities_Paginator__WEBPACK_IMPORTED_MODULE_4__.default('getAdvertisements')
+  paginator: new _classes_utilities_Paginator__WEBPACK_IMPORTED_MODULE_4__.default()
 };
 var getters = {
   advertisements: function advertisements(state) {
@@ -19193,7 +19200,7 @@ var mutations = {
     state.advertisements = new _classes_collections_AdvertisementCollection__WEBPACK_IMPORTED_MODULE_5__.default(payload.data.map(function (item) {
       return new _classes_models_Advertisement__WEBPACK_IMPORTED_MODULE_3__.default(item);
     }));
-    state.paginator = new _classes_utilities_Paginator__WEBPACK_IMPORTED_MODULE_4__.default('getAdvertisements', payload.meta);
+    state.paginator = new _classes_utilities_Paginator__WEBPACK_IMPORTED_MODULE_4__.default(payload.meta);
   },
   SET_USER_ADVERTISEMENTS: function SET_USER_ADVERTISEMENTS(state, payload) {
     state.userAdvertisements = new _classes_collections_AdvertisementCollection__WEBPACK_IMPORTED_MODULE_5__.default(payload.data.map(function (item) {
@@ -19211,6 +19218,9 @@ var mutations = {
   },
   DELETE_ADVERTISEMENT: function DELETE_ADVERTISEMENT(state, id) {
     state.userAdvertisements["delete"](id);
+  },
+  RESET_PAGINATOR: function RESET_PAGINATOR(state) {
+    state.paginator = new _classes_utilities_Paginator__WEBPACK_IMPORTED_MODULE_4__.default();
   }
 };
 var actions = {
@@ -19224,7 +19234,7 @@ var actions = {
     }
 
     if (options !== null && options !== void 0 && options.fromPostcode && options !== null && options !== void 0 && options.maxDistance) {
-      queryString = queryString.concat("&fromPostcode=".concat(options.fromFostcode));
+      queryString = queryString.concat("&fromPostcode=".concat(options.fromPostcode));
       queryString = queryString.concat("&maxDistance=".concat(options.maxDistance));
     }
 
@@ -19274,6 +19284,10 @@ var actions = {
       commit('SET_ADVERTISEMENT', response.data);
       form.onSuccess(response.data.message);
     });
+  },
+  resetPaginator: function resetPaginator(_ref8) {
+    var commit = _ref8.commit;
+    commit('RESET_PAGINATOR');
   }
 };
 var advertisementModule = {

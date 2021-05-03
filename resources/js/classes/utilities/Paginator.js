@@ -1,4 +1,3 @@
-import store from '../../store';
 
 export const DEFAULT_DATA = {
 	current_page: 1,
@@ -7,8 +6,7 @@ export const DEFAULT_DATA = {
 }
 
 export default class Paginator {
-	constructor(action, data = DEFAULT_DATA) {		
-		this.action = action;
+	constructor(data = DEFAULT_DATA) {		
 		this.update(data);		
 	}
 
@@ -33,18 +31,12 @@ export default class Paginator {
 	next() {
 		if (this.hasNext()) {
 			this.current_page++;
-			this.dispatch();
 		}
 	}
 
 	previous() {
 		if (this.hasPrevious()) {
 			this.current_page--;
-			this.dispatch();
 		}
-	}
-
-	dispatch() {
-		store.dispatch(this.action);
 	}
 }

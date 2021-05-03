@@ -10,7 +10,7 @@ const state = {
     advertisements: new AdvertisementCollection(),
 	userAdvertisements: new AdvertisementCollection(),
 	advertisement: new Advertisement(),
-	paginator: new Paginator('getAdvertisements'),
+	paginator: new Paginator(),
 }
 
 const getters = {
@@ -45,7 +45,7 @@ const getters = {
 const mutations = {
     SET_ADVERTISEMENTS(state, payload) {
 		state.advertisements = new AdvertisementCollection(payload.data.map(item => new Advertisement(item)));	
-		state.paginator = new Paginator('getAdvertisements', payload.meta);
+		state.paginator = new Paginator(payload.meta);
     },
 	SET_USER_ADVERTISEMENTS(state, payload) {
 		state.userAdvertisements = new AdvertisementCollection(payload.data.map(item => new Advertisement(item)));
@@ -61,19 +61,23 @@ const mutations = {
 	},
 	DELETE_ADVERTISEMENT(state, id) {
 		state.userAdvertisements.delete(id);
+	},
+	RESET_PAGINATOR(state) {
+		state.paginator = new Paginator();
 	}
 }
 
 const actions = {
     getAdvertisements({commit}, options) {
 		let queryString = store.getters.paginator.queryString();
+
 		if (options?.filter) {
 			queryString = queryString.concat('&categories=');
 			queryString = queryString.concat(options.filter.join());
 		}
 
 		if (options?.fromPostcode && options?.maxDistance) {
-			queryString = queryString.concat(`&fromPostcode=${options.fromFostcode}`);
+			queryString = queryString.concat(`&fromPostcode=${options.fromPostcode}`);
 			queryString = queryString.concat(`&maxDistance=${options.maxDistance}`);
 		}
 
@@ -120,6 +124,9 @@ const actions = {
 				commit('SET_ADVERTISEMENT', response.data)
 				form.onSuccess(response.data.message)
 			});
+	},
+	resetPaginator({commit}) {
+		commit('RESET_PAGINATOR');
 	}
 }
 

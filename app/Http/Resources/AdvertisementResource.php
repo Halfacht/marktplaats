@@ -29,7 +29,7 @@ class AdvertisementResource extends JsonResource
 			'owner' => new OwnerResource($this->owner),
 			'biddings' => BiddingResource::collection($this->whenLoaded('biddings')),
 			'created_at' => $this->created_at,
-			'distance' => $this->distance ?? Auth::check() ? DistanceHelper::betweenPostcodes(Auth::user()->postcode, $this->owner->postcode) : null,
+			'distance' => $this->distance ?? (Auth::check() ? DistanceHelper::betweenPostcodes(Auth::user()->postcode, $this->owner->postcode) : null),
 		];
     }
 }

@@ -4,13 +4,13 @@
       <p>
         <a
           :class="paginator.hasPrevious() ? 'text-success' : 'text-muted'"
-          @click="paginator.previous()"
+          @click="previous()"
           >Previous</a
         >
         |
         <a
           :class="paginator.hasNext() ? 'text-success' : 'text-muted'"
-          @click="paginator.next()"
+          @click="next()"
           >Next</a
         >
       </p>
@@ -22,6 +22,8 @@
 <script>
 import { mapGetters } from "vuex";
 export default {
+	emits: ['changePage'],
+
   computed: {
     ...mapGetters(["paginator"]),
   },
@@ -29,11 +31,15 @@ export default {
   methods: {
     next() {
       if (this.paginator.hasNext()) {
+		  this.paginator.next();
+		  this.$emit('changePage');
       }
     },
 
     previous() {
       if (this.paginator.hasPrevious()) {
+		  this.paginator.previous();
+		  this.$emit('changePage');
       }
     },
   },

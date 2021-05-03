@@ -29,12 +29,13 @@ public function __construct()
      */
     public function index(GetAdvertisementsRequest $request)
     {
-		$categoryString = $request->query('categories');
+		$category_ids = $request->query('categories');
 		$postcodeDigits = $request->query('fromPostcode');
 		$maxDistance = $request->query('maxDistance');
 
 		$users_within_range = null;
 
+		
 		if ($postcodeDigits && $maxDistance) {
 			$postcode = Postcode::where('postcode', $postcodeDigits)->first();
 		
@@ -44,8 +45,8 @@ public function __construct()
 		}
 
         $advertisements = Advertisement::orderByDesc('sort_date')
-			->when($categoryString, function ($query, $categoryString) {
-				return $query->whereIn('category_id', explode(',', $categoryString));
+			->when($category_ids, function ($query, $category_ids) {
+				return $query->whereIn('category_id', $category_ids);
 			})
 			->when($users_within_range, function ($query) use ($users_within_range) {
 				return $query->whereIn('user_id', $users_within_range->pluck('id'));
