@@ -45,7 +45,7 @@ const getters = {
 const mutations = {
     SET_ADVERTISEMENTS(state, payload) {
 		state.advertisements = new AdvertisementCollection(payload.data.map(item => new Advertisement(item)));	
-		state.paginator = new Paginator('getAdvertisements', payload);
+		state.paginator = new Paginator('getAdvertisements', payload.meta);
     },
 	SET_USER_ADVERTISEMENTS(state, payload) {
 		state.userAdvertisements = new AdvertisementCollection(payload.data.map(item => new Advertisement(item)));

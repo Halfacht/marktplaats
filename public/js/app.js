@@ -19193,7 +19193,7 @@ var mutations = {
     state.advertisements = new _classes_collections_AdvertisementCollection__WEBPACK_IMPORTED_MODULE_5__.default(payload.data.map(function (item) {
       return new _classes_models_Advertisement__WEBPACK_IMPORTED_MODULE_3__.default(item);
     }));
-    state.paginator = new _classes_utilities_Paginator__WEBPACK_IMPORTED_MODULE_4__.default('getAdvertisements', payload);
+    state.paginator = new _classes_utilities_Paginator__WEBPACK_IMPORTED_MODULE_4__.default('getAdvertisements', payload.meta);
   },
   SET_USER_ADVERTISEMENTS: function SET_USER_ADVERTISEMENTS(state, payload) {
     state.userAdvertisements = new _classes_collections_AdvertisementCollection__WEBPACK_IMPORTED_MODULE_5__.default(payload.data.map(function (item) {

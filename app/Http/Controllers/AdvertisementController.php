@@ -59,7 +59,7 @@ public function __construct()
 			});
 		}
 
-		return new AdvertisementCollectionResource($advertisements);
+		return AdvertisementResource::collection($advertisements);
     }
 
     /**
