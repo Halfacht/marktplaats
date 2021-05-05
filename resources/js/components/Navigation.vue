@@ -12,21 +12,24 @@
 
         <template v-if="auth">
           <li class="nav-item">
-            <router-link
-              :to="{ name: 'user.advertisements' }"
-              class="nav-link"
+            <router-link :to="{ name: 'user.advertisements' }" class="nav-link"
               >My Advertisements
             </router-link>
           </li>
-		  <li class="nav-item">
+          <li class="nav-item">
             <router-link
               :to="{ name: 'advertisements.create' }"
               class="nav-link"
               >New Advertisement
             </router-link>
           </li>
-
-
+          <li class="nav-item">
+            <router-link
+              :to="{ name: 'chat' }"
+              class="nav-link"
+              >Chat
+            </router-link>
+          </li>
         </template>
       </ul>
 

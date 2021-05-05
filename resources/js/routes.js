@@ -5,6 +5,8 @@ import Register from './views/Register.vue';
 import CreateAdvertisement from './views/advertisements/Create.vue';
 import UserAdvertisements from './views/advertisements/User.vue';
 import ShowAdvertisement from './views/advertisements/Show.vue';
+import Inbox from './views/chat/Inbox.vue';
+import Conversation from './views/chat/Conversation.vue';
 
 const routes = [
     {
@@ -44,6 +46,17 @@ const routes = [
         component: CreateAdvertisement,
         props: true,
     },
+	{
+		path: "/chat",
+		name: "chat",
+		component: Inbox
+	},
+	{
+		path: "/chat/:id",
+		name: "conversation",
+		component: Conversation,
+		props: true,
+	},
 ];
 
 const router = createRouter({

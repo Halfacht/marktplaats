@@ -24,8 +24,8 @@ class MessageFactory extends Factory
     {
         return [
             'content' => $this->faker->sentence(12),
-            'from' => User::inRandomOrder()->first()->id,
-            'to' => User::inRandomOrder()->first()->id,
+            'receiver_id' => User::inRandomOrder()->first()->id,
+            'sender_id' => User::inRandomOrder()->first()->id,
         ];
     }
 }
