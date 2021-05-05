@@ -29,6 +29,7 @@ public function __construct()
      */
     public function index(GetAdvertisementsRequest $request)
     {
+		$search = $request->query('search');
 		$category_ids = $request->query('categories');
 		$postcodeDigits = $request->query('fromPostcode');
 		$maxDistance = $request->query('maxDistance');
@@ -44,23 +45,31 @@ public function __construct()
 				->get();
 		}
 
-        $advertisements = Advertisement::orderByDesc('sort_date')
+        $paginator = Advertisement::orderByDesc('sort_date')
+			->when($search, function($query, $search) {
+				$query->where(function ($query) use ($search) {
+					$query->where('title', 'like', "%${search}%")
+						->orWhere('content', 'like', "${search}%");
+				});
+			})
 			->when($category_ids, function ($query, $category_ids) {
 				return $query->whereIn('category_id', $category_ids);
 			})
-			->when($users_within_range, function ($query) use ($users_within_range) {
-				return $query->whereIn('user_id', $users_within_range->pluck('id'));
+			->when($users_within_range, function ($query, $users_within_range) {
+				$query->whereIn('user_id', $users_within_range->pluck('id'));
+				// For some reason this didn't work when I used a return statement, while the return statement works for category filter
 			})
 			->paginate($request->query('per_page'));
-		
+			
 		// Merge distance into advertisements
 		if ($users_within_range) {
-			$advertisements->each(function ($advertiement) use ($users_within_range) {
-				$advertiement->distance = round($users_within_range->firstWhere('id', $advertiement->user_id)->distance);
+			$paginator->getCollection()->transform(function ($advertisement) use ($users_within_range) {
+				$advertisement->distance = round($users_within_range->firstWhere('id', $advertisement->user_id)->distance);
+				return $advertisement;
 			});
 		}
 
-		return AdvertisementResource::collection($advertisements);
+		return AdvertisementResource::collection($paginator);
     }
 
     /**

@@ -71,6 +71,10 @@ const actions = {
     getAdvertisements({commit}, options) {
 		let queryString = store.getters.paginator.queryString();
 
+		if (options?.search) {
+			queryString = queryString.concat(`&search=${options.search}`);
+		}
+
 		if (options?.filter) {
 			queryString = queryString.concat('&categories=');
 			queryString = queryString.concat(options.filter.join());

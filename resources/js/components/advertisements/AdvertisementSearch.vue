@@ -3,6 +3,18 @@
     <div class="col-12">
       <div class="form-floating">
         <input
+          id="search"
+          :value="search"
+          class="form-control"
+          type="text"
+          @input="$emit('update:search', $event.target.value)"
+        />
+        <label for="search">Search</label>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="form-floating">
+        <input
           id="postcode"
           :value="postcode"
           class="form-control"
@@ -24,20 +36,21 @@
         <label for="distance">Max Distance</label>
       </div>
     </div>
-	<div class="col">
-		<button class="btn btn-info" @click="$emit('search')">Search</button>
-	</div>
+    <div class="col">
+      <button class="btn btn-info" @click="$emit('search')">Search</button>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
   props: {
+    search: String,
     postcode: String,
     distance: String,
   },
 
-  emits: ["update:postcode", "update:distance", 'search'],
+  emits: ["update:search", "update:postcode", "update:distance", "search"],
 
   methods: {
     update(event, value) {

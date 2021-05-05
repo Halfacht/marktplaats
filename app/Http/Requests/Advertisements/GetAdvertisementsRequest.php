@@ -25,6 +25,7 @@ class GetAdvertisementsRequest extends FormRequest
     public function rules()
     {
         return [
+			'search' => ['nullable', 'string'],
             'categories' => ['nullable', 'array'],
 			'categories.*' => ['integer'],
 			'fromPostcode' => ['nullable', Rule::exists('postcodes', 'postcode')],

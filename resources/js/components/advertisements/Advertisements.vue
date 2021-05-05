@@ -1,10 +1,11 @@
 <template>
   <advertisements-filter v-model="options.filter"></advertisements-filter>
-  <advertisement-distance-search
+  <advertisement-search
+  	v-model:search="options.search"
     v-model:postcode="options.fromPostcode"
     v-model:distance="options.maxDistance"
     @search="search"
-  ></advertisement-distance-search>
+  ></advertisement-search>
   <advertisement-list-item
     v-for="advertisement in advertisements.items"
     :advertisement="advertisement"
@@ -16,7 +17,7 @@
 import { mapGetters } from "vuex";
 import AdvertisementListItem from "./AdvertisementListItem.vue";
 import AdvertisementsFilter from "./AdvertisementsFilter.vue";
-import AdvertisementDistanceSearch from "./AdvertisementDistanceSearch.vue";
+import AdvertisementSearch from "./AdvertisementSearch.vue";
 import AdvertisementPages from "../parts/Pages.vue";
 
 export default {
@@ -24,13 +25,14 @@ export default {
     AdvertisementListItem,
     AdvertisementsFilter,
     AdvertisementPages,
-    AdvertisementDistanceSearch,
+    AdvertisementSearch,
   },
 
   data() {
     return {
       options: {
         filter: [],
+		search: '',
         fromPostcode: null,
         maxDistance: null,
       },
