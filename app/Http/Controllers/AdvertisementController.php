@@ -5,13 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\Advertisements\GetAdvertisementsRequest;
 use App\Http\Requests\Advertisements\StoreAdvertisementRequest;
 use App\Http\Requests\Advertisements\UpdateAdvertisementRequest;
-use App\Http\Resources\AdvertisementCollectionResource;
 use App\Http\Resources\AdvertisementResource;
 use App\Models\Advertisement;
 use App\Models\Postcode;
 use App\Models\User;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class AdvertisementController extends Controller
@@ -106,6 +105,8 @@ public function __construct()
     }
 
 	public function update(UpdateAdvertisementRequest $request, Advertisement $advertisement) {
+		$this->authorize('update', $advertisement);
+		
 		$advertisement->update($request->validated());
 
 		$advertisement->refresh();
@@ -130,4 +131,14 @@ public function __construct()
 			'message' => 'deleting was successful'
 		]);
     }
+
+	public function top(Advertisement $advertisement) {
+		$this->authorize('top', $advertisement);
+
+		$advertisement->update([
+			'sort_date' => Carbon::now(),
+		]);
+
+		return response()->json(Response::HTTP_OK);
+	}
 }

@@ -9,6 +9,7 @@
               <th>Title</th>
               <th>Price</th>
               <th>Created At</th>
+			  <th>Place On Top</th>
               <th>Edit</th>
               <th>Delete</th>
             </tr>
@@ -19,6 +20,9 @@
               <td>{{ advertisement.title }}</td>
               <td>€ {{ advertisement.price }}</td>
               <td>{{ advertisement.createdAt }}</td>
+			  <td>
+				  <button class="btn btn-primary" @click="top(advertisement)">To Top</button>
+			  </td>
               <td>
                 <router-link
                   :to="{
@@ -59,6 +63,13 @@ export default {
         this.$store.dispatch("deleteAdvertisement", advertisement.id);
       }
     },
+	top(advertisement) {
+		if (
+        confirm(`Place your advertisement (${advertisement.title}) back to the top of the search results. After confirming you will be charged for an amount of 10 euros`)
+      ) {
+        this.$store.dispatch("topAdvertisement", advertisement.id);
+      }
+	}
   },
 };
 </script>

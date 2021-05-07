@@ -9,6 +9,7 @@ export const DEFAULT_DATA = {
 	user: {},
 	category: '',
 	category_id: null,
+	created_at: '',
 }
 
 export default class Advertisement extends Model {

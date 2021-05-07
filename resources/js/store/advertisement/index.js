@@ -118,6 +118,13 @@ const actions = {
 		axios.delete(`/api/advertisements/${id}`)
 			.then(commit('DELETE_ADVERTISEMENT', id));
 	},
+	topAdvertisement({commit}, id) {
+		axios.post(`/api/advertisements/${id}/top`)
+			.then(response => {
+				commit('RESET_PAGINATOR');
+				store.dispatch('getAdvertisements');
+			})
+	},
 	storeBidding({commit}, form) {
 		console.log('inaction form:', form);
 		

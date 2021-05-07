@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <template v-for="message in conversation">
+    <template v-for="message in conversation.items">
       <div
         class="row mb-3"
         :class="{ 'justify-content-end': message.receiver.id === currentId }"
@@ -9,7 +9,7 @@
           <div class="card">
             <div class="card-body">
               <p class="mb-0">{{ message.content }}</p>
-              <span class="float-end text-muted">{{ message.created_at }}</span>
+              <span class="float-end text-muted">{{ message.createdAt }}</span>
             </div>
           </div>
         </div>
@@ -67,6 +67,7 @@ export default {
   methods: {
     submit() {
       this.form.action("storeMessage");
+	  this.form.reset();
     },
   },
 

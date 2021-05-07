@@ -20,6 +20,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::resource('advertisements', AdvertisementController::class)->except(['create', 'edit']);
+Route::post('advertisements/{advertisement}/top', [AdvertisementController::class, 'top'])->middleware('auth');
+
 Route::get('user-advertisements', [UserAdvertisementController::class, 'index'])->middleware('auth');
 
 Route::get('categories', [CategoryController::class, 'index']);

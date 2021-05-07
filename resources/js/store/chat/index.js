@@ -1,4 +1,6 @@
 import axios from 'axios';
+import MessageCollection from '../../classes/collections/MessageCollection';
+import Message from '../../classes/models/Message';
 import store from "../../store";
 
 const state = {
@@ -21,14 +23,13 @@ const getters = {
 
 const mutations = {
     SET_CONVERSATIONS(state, payload) {		
-        state.conversations = payload.data;		
-    },
+		state.conversations = payload.data;
+	},
 	SET_CONVERSATION(state, payload) {
-		state.conversation = payload.data;
+		state.conversation = new MessageCollection(payload.data.map(item => new Message(item)));
 	},
 	ADD_MESSAGE(state, payload) {
-		console.log('payload', payload);
-		console.log('todo: make add message mutation');
+		state.conversation.add(new Message(payload.message))
 	}
 };
 
